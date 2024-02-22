@@ -1,9 +1,15 @@
 import requests
 import json
 from bs4 import BeautifulSoup
+import time
+from datetime import datetime
 
+now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+print(f'> fiagro.scrapper.download_pdfs - started={now}')
+start_time = time.time()
 file_path = 'sources.txt'
 #
+
 with open(file_path, 'r', encoding='utf-8') as file:
     for line in file:
         url = line.strip()
@@ -31,4 +37,8 @@ with open(file_path, 'r', encoding='utf-8') as file:
                         print(f"Downloaded {pdf_filename}...")
                     else:
                         print(f"Falha no download de {download_link}. Status={response.status_code}")
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(f'> end - elapsed time={elapsed_time}')
 
