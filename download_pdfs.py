@@ -8,17 +8,6 @@ import base64
 import codecs
 
 def download_pdfs(file_path):
-    """
-    headers = {
-        "User-Agent": "PostmanRuntime/7.20.1",
-        "Accept": "*/*",
-        "Cache-Control": "no-cache",
-        "Postman-Token": "8eb5df70-4da6-4ba1-a9dd-e68880316cd9,30ac79fa-969b-4a24-8035-26ad1a2650e1",
-        "Host": "medianet.edmond-de-rothschild.fr",
-        "Accept-Encoding": "gzip, deflate",
-        "Connection": "keep-alive",
-        "cache-control": "no-cache",
-    }"""
     with open(file_path, 'r', encoding='utf-8') as file:
         for line in file:
             url = line.strip()
