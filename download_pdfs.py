@@ -4,8 +4,11 @@ from bs4 import BeautifulSoup
 import time
 import pandas as pd
 from datetime import datetime
+import base64
+import codecs
 
 def download_pdfs(file_path):
+    """
     headers = {
         "User-Agent": "PostmanRuntime/7.20.1",
         "Accept": "*/*",
@@ -15,7 +18,7 @@ def download_pdfs(file_path):
         "Accept-Encoding": "gzip, deflate",
         "Connection": "keep-alive",
         "cache-control": "no-cache",
-    }
+    }"""
     with open(file_path, 'r', encoding='utf-8') as file:
         for line in file:
             url = line.strip()
@@ -35,16 +38,16 @@ def download_pdfs(file_path):
                     if (item['titulo'].find('Gerencial') != -1):
                         date_report = item['date'].replace('/', '-')
                         download_link = item['linkpdf']
-                        download = requests.get(download_link, download_link, headers=headers)
+                        download = requests.get(download_link)
                         if download.status_code == 200:
                             pdf_filename = f'pdfs/{fiagro_code}_{date_report}.pdf'
-                            with open(pdf_filename, 'wb') as file:
-                                file.write_bytes(download.content)
-                            print(f"Downloaded {pdf_filename}...")
+                            file = open(pdf_filename, 'wb')
+                            content_decoded = base64.b64decode(download.content)
+                            file.write(content_decoded)
                             file.close()
+                            print(f"Downloaded {pdf_filename}...")
                         else:
                             print(f"Falha no download de {download_link}. Status={response.status_code}")
-                        exit('deydan')
 #
 def download_series(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
