@@ -6,6 +6,9 @@ import pandas as pd
 from datetime import datetime
 import base64
 import codecs
+import numpy as np
+from types import NoneType
+
 
 def download_pdfs(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -51,40 +54,29 @@ def download_series(file_path):
             if (series_reports == None):
                 print(f"WARN: escaping updates for={fiagro_code}")
                 continue
-            attr = series_reports.get('data-options')
-            data = json.loads(attr)
-            df = None
-            for page_item in data['data']['items']:
-                for item in page_item:
-                    print(item)
-                    if (df == None):
+            try:
+                attr = series_reports.get('data-options')
+                data = json.loads(attr)
+                df = None
+                for item in data['data']['items'][0]:
+                    if (type(df) == NoneType):
                         df = pd.DataFrame(columns=item.keys())
-                    df = df.append(item, ignore_index=True)
-            csv_filename = f'csvs/{fiagro_code}.csv'
-            print(csv_filename)
-            print(df)
-            exit()
-            """
-            if (item['titulo'].find('Gerencial') != -1):
-                
-                download_link = item['linkpdf']
-                download = requests.get(download_link)
-                if download.status_code == 200:
-                    
-                    with open(pdf_filename, 'wb') as file:
-                        file.write(download.content)
-                    print(f"Downloaded {pdf_filename}...")
-                else:
-                    print(f"Falha no download de {download_link}. Status={response.status_code}")
-#"""
-now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-print(f'> fiagro.scrapper.download_pdfs - started={now}')
-start_time = time.time()
-file_path = 'sources.txt'
+                    new = pd.json_normalize(item)
+                    df = pd.concat([df, new], ignore_index=True)
+                #df.to_csv('out.csv', index=False)
+                csv_filename = f'csvs/{fiagro_code}_series.csv'
+                print(f"Downloaded {csv_filename}...")
+            except:
+                print(f"Falha no download de {url}. Status={response.status_code}")
+#               
+def main():
+    now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    print(f'> fiagro.scrapper.download_pdfs - started={now}')
+    start_time = time.time()
+    file_path = 'sources.txt'
+    download_series(file_path)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f'> end - elapsed time={elapsed_time}')
 #
-download_pdfs(file_path)
-#download_series(file_path)
-#
-end_time = time.time()
-elapsed_time = end_time - start_time
-print(f'> end - elapsed time={elapsed_time}')
+main()
