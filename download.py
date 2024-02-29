@@ -74,6 +74,7 @@ def main():
     print(f'> fiagro.scrapper.download_pdfs - started={now}')
     start_time = time.time()
     file_path = 'sources.txt'
+    #download_pdfs(file_path)
     download_series(file_path)
     end_time = time.time()
     elapsed_time = end_time - start_time
