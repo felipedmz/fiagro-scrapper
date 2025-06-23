@@ -1,14 +1,3 @@
-"""
-Extrai as URLs dos Fiagros em https://fiagro.com.br/ e grava
-um arquivo datado com o sufixo _sources.txt.
-
-Uso:
-    python fiagro_sources.py /caminho/para/output
-Requisitos:
-    pip install requests beautifulsoup4
-"""
-
-import datetime as dt
 import os
 import re
 import sys
@@ -18,9 +7,7 @@ from bs4 import BeautifulSoup
 
 BASE_URL = "https://fiagro.com.br/"
 
-
-def coletar_urls() -> list[str]:
-    """Baixa a página principal e devolve a lista de URLs dos Fiagros."""
+def collect_urls() -> list[str]:
     resp = requests.get(BASE_URL, timeout=15)
     resp.raise_for_status()
 
@@ -41,8 +28,7 @@ def coletar_urls() -> list[str]:
 
     return sorted(urls, key=str.lower)
 #
-def salvar(urls: list[str]) -> str:
-    """Grava as URLs em <YYYY-MM-DD>_sources.txt dentro da pasta destino."""
+def save(urls: list[str]) -> str:
     caminho = "./sources.txt"
     os.makedirs(os.path.dirname(caminho), exist_ok=True)
 
@@ -53,8 +39,8 @@ def salvar(urls: list[str]) -> str:
 #
 def main():
     try:
-        urls = coletar_urls()
-        caminho_saida = salvar(urls)
+        urls = collect_urls()
+        caminho_saida = save(urls)
         print(f"{len(urls)} URLs salvos em: {caminho_saida}")
     except Exception as exc:
         print(f"Erro: {exc}", file=sys.stderr)

@@ -5,8 +5,6 @@ import time
 import pandas as pd
 from datetime import datetime
 import base64
-import codecs
-import numpy as np
 from types import NoneType
 import csv
 
